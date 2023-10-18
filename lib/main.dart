@@ -1,34 +1,21 @@
 import 'dart:async';
-import 'package:dart_appwrite/dart_appwrite.dart';
+import 'dart:convert';
 
-// This is your Appwrite function
-// It's executed each time we get a request
 Future<dynamic> main(final context) async {
-// Why not try the Appwrite SDK?
-  //
-  // final client = Client()
-  //    .setEndpoint('https://cloud.appwrite.io/v1')
-  //    .setProject(process.env.APPWRITE_FUNCTION_PROJECT_ID)
-  //    .setKey(process.env.APPWRITE_API_KEY);
+ final data = context.req.headers;
+ final responseType = json.encode(data['Content-Type']);
 
-  // You can log messages to the console
-  context.log('Hello, Logs!');
-
-  // If something goes wrong, log an error
-  context.error('Hello, Errors!');
-
-  // The `req` object contains the request data
-  if (context.req.method == 'GET') {
-    // Send a response with the res object helpers
-    // `res.send()` dispatches a string back to the client
-    return context.res.send('Hello, World!');
-  }
-
-  // `res.json()` is a handy helper for sending JSON
-  return context.res.json({
-    'motto': 'Build like a team of hundreds_',
-    'learn': 'https://appwrite.io/docs',
-    'connect': 'https://appwrite.io/discord',
-    'getInspired': 'https://builtwith.appwrite.io',
-  });
+  switch (responseType) {
+      case 'application/json':
+        return context.res.json(
+            {'type': 'This is a sample JSON response from Appwrite function'});
+      case 'text/html':
+        return context.res.send(
+            '<h1>This is a sample HTML response from Appwrite function</h1>',
+            200,
+            {'content-type': 'text/html'});
+      default:
+        return context.res
+            .send('This is a sample text response from Appwrite function');
+    }
 }
